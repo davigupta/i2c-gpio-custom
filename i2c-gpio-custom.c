@@ -167,7 +167,11 @@ static int __init i2c_gpio_custom_add_one(unsigned int id, unsigned int *params)
 		err = -EINVAL;
 		goto err;
 	}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+	gpiod_table->table[0].key = chip_sda->label;
+#else
 	gpiod_table->table[0].chip_label = chip_sda->label;
+#endif
 	gpiod_table->table[0].chip_hwnum = params[BUS_PARAM_SDA] - chip_sda->base;
 
 	chip_scl = gpio_to_chip(params[BUS_PARAM_SCL]);
@@ -176,7 +180,11 @@ static int __init i2c_gpio_custom_add_one(unsigned int id, unsigned int *params)
 		err = -EINVAL;
 		goto err;
 	}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+	gpiod_table->table[1].key = chip_scl->label;
+#else
 	gpiod_table->table[1].chip_label = chip_scl->label;
+#endif
 	gpiod_table->table[1].chip_hwnum = params[BUS_PARAM_SCL] - chip_scl->base;
 
 	dev_id = kmalloc(BUS_NAME_MAX+1, GFP_KERNEL);
